@@ -4,6 +4,7 @@ import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.amr.gharseldin.productbrowser.R
 import com.amr.gharseldin.productbrowser.model.Product
@@ -15,7 +16,6 @@ import kotlinx.android.synthetic.main.product_list_row.view.*
 
 class ProductAdapter(var products: ArrayList<Product>) :
     RecyclerView.Adapter<ProductAdapter.ProductViewHolder>() {
-
 
     fun updateProducts(newProducts: List<Product>) {
         products.clear()

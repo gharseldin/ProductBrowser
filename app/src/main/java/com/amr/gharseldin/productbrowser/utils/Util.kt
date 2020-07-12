@@ -3,6 +3,7 @@ package com.amr.gharseldin.productbrowser.utils
 import android.content.Context
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.lifecycle.MutableLiveData
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.amr.gharseldin.productbrowser.R
 import com.amr.gharseldin.productbrowser.model.BASE_URL
@@ -33,4 +34,10 @@ fun TextView.setUnitPrice(price:String?){
 
 fun TextView.setDecimalPrice(price:String?){
     this.text = price?.split("$")?.get(1)?.split(".")?.get(1)?:"0"
+}
+
+operator fun <T> MutableLiveData<ArrayList<T>>.plusAssign(values: List<T>) {
+    val value = this.value ?: arrayListOf()
+    value.addAll(values)
+    this.value = value
 }
