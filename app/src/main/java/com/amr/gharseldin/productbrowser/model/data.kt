@@ -29,7 +29,7 @@ data class Product(
     @SerializedName("productImage")
     val productImage: String?,
     @SerializedName("reviewRating")
-    val reviewRating: Int?,
+    val reviewRating: Float?,
     @SerializedName("reviewCount")
     val reviewCount: Int?,
     @SerializedName("inStock")
