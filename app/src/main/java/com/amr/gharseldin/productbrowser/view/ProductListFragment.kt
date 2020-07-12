@@ -9,6 +9,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.amr.gharseldin.productbrowser.R
 import com.amr.gharseldin.productbrowser.viewmodel.ProductViewModel
 import kotlinx.android.synthetic.main.product_list.*
@@ -36,6 +37,16 @@ public class ProductListFragment : Fragment() {
             layoutManager = LinearLayoutManager(context)
             addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
             adapter = productAdapter
+            addOnScrollListener(object: RecyclerView.OnScrollListener(){
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+                    val totalItemCount = (layoutManager as LinearLayoutManager).itemCount
+                    val lastVisibleItem = (layoutManager as LinearLayoutManager).findLastVisibleItemPosition()
+                    if(lastVisibleItem > totalItemCount-5) {
+                            productViewModel.loadMore(totalItemCount)
+                    }
+                }
+            })
         }
 
         swipeRefresh.setOnRefreshListener {
