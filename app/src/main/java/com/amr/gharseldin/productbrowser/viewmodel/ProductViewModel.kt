@@ -3,18 +3,49 @@ package com.amr.gharseldin.productbrowser.viewmodel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.amr.gharseldin.productbrowser.model.Product
+import com.amr.gharseldin.productbrowser.model.ProductList
+import com.amr.gharseldin.productbrowser.model.ProductsService
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.observers.DisposableSingleObserver
+import io.reactivex.schedulers.Schedulers
 
 class ProductViewModel : ViewModel() {
 
+    private val productService = ProductsService()
+    private val disposable = CompositeDisposable()
     val products = MutableLiveData<List<Product>>()
     val productsLoadingError = MutableLiveData<Boolean>()
     val productLoading = MutableLiveData<Boolean>()
 
     fun refresh() {
-        fetchProducts()
+        fetchMockProducts()
+        fetchApiProducts()
     }
 
-    private fun fetchProducts() {
+    private fun fetchApiProducts() {
+        productLoading.value = true
+        disposable.add(productService.getProducts(1, 30)
+            .subscribeOn(Schedulers.newThread())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeWith(object : DisposableSingleObserver<ProductList>() {
+                override fun onSuccess(value: ProductList?) {
+                    // TODO can handle more edge cases with the response status
+                    products.value = value?.products
+                    productLoading.value = false
+                    productsLoadingError.value = false
+                }
+
+                override fun onError(e: Throwable?) {
+                    productLoading.value = false
+                    productsLoadingError.value = true
+                }
+            })
+        )
+
+    }
+
+    private fun fetchMockProducts() {
         val mockData = listOf(
             Product(
                 "001",

@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.amr.gharseldin.productbrowser.R
 import com.amr.gharseldin.productbrowser.viewmodel.ProductViewModel
@@ -28,8 +29,12 @@ public class ProductListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        productViewModel = ViewModelProviders.of(this).get(ProductViewModel::class.java)
+        productViewModel.refresh()
+
         productsList.apply {
             layoutManager = LinearLayoutManager(context)
+            addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
             adapter = productAdapter
         }
 
@@ -41,14 +46,9 @@ public class ProductListFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        productViewModel = ViewModelProviders.of(this).get(ProductViewModel::class.java)
-        productViewModel.refresh()
         observeViewModel()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-    }
     private fun observeViewModel() {
 
         productViewModel.products.observe(viewLifecycleOwner, Observer { products ->
