@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Product Browser</string>
+    <string name="loading_list_error_text">There was an error loading the list of Products</string>
+    <string name="dollar_sign">$</string>
 </resources>
