@@ -16,6 +16,7 @@ object ProductRepository {
     private var page = 1
     private const val pageSize = 30
     private var maxPage = 1
+    private val products = mutableListOf<Product>()
     var totalDataCount = 0
 
     fun fetchApiProducts(): Single<List<Product>>? {
@@ -28,9 +29,14 @@ object ProductRepository {
                     override fun onSuccess(value: ProductList?) {
                         totalDataCount = value?.totalProducts ?: 0
                         page++
-                        maxPage = totalDataCount/ pageSize
-                        if(totalDataCount% pageSize!=0) maxPage++
-                        emitter.onSuccess(value?.products)
+                        maxPage = totalDataCount / pageSize
+                        if (totalDataCount % pageSize != 0) maxPage++
+                        products.clear()
+                        value?.products?.let {
+                            products.clear()
+                            products.addAll(it)
+                        }
+                        emitter.onSuccess(products)
                     }
 
                     override fun onError(e: Throwable?) {
@@ -42,7 +48,7 @@ object ProductRepository {
     }
 
 
-    fun loadMore():Single<List<Product>> {
+    fun loadMore(): Single<List<Product>> {
         return Single.create { emitter ->
             productService.getProducts(page, pageSize)
                 .subscribeOn(Schedulers.newThread())
@@ -51,17 +57,29 @@ object ProductRepository {
                     override fun onSuccess(value: ProductList?) {
                         totalDataCount = value?.totalProducts ?: 0
                         page++
-                        maxPage = totalDataCount/ pageSize
-                        if(totalDataCount% pageSize!=0) maxPage++
-                        emitter.onSuccess(value?.products)
+                        maxPage = totalDataCount / pageSize
+                        if (totalDataCount % pageSize != 0) maxPage++
+                        value?.products?.let {
+                            products.addAll(it)
+                        }
+                        emitter.onSuccess(products)
                     }
 
                     override fun onError(e: Throwable?) {
                         emitter.onError(e)
                     }
-
                 })
         }
+    }
+
+    fun findProductById(id: String): Product? {
+        // This is definitely not an efficient search. I would have products associated by their
+        // Ids in a map and fetch them as the user navigates to the details of a specific product
+        for(p:Product in products){
+            if (p.productId.equals(id))
+                return p
+        }
+        return null
     }
 
     fun fetchMockProducts(): Single<ProductList> {

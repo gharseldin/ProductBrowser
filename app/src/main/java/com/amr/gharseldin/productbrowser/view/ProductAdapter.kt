@@ -14,8 +14,10 @@ import com.amr.gharseldin.productbrowser.utils.setDecimalPrice
 import com.amr.gharseldin.productbrowser.utils.setUnitPrice
 import kotlinx.android.synthetic.main.product_list_row.view.*
 
-class ProductAdapter(var products: ArrayList<Product>) :
-    RecyclerView.Adapter<ProductAdapter.ProductViewHolder>() {
+class ProductAdapter(
+    var products: ArrayList<Product>,
+    private val onRowClick: (Product) -> Unit
+) : RecyclerView.Adapter<ProductAdapter.ProductViewHolder>() {
 
     fun updateProducts(newProducts: List<Product>) {
         products.clear()
@@ -29,7 +31,8 @@ class ProductAdapter(var products: ArrayList<Product>) :
                 R.layout.product_list_row,
                 parent,
                 false
-            )
+            ),
+            onRowClick
         )
 
     override fun getItemCount() = products.size
@@ -38,7 +41,9 @@ class ProductAdapter(var products: ArrayList<Product>) :
         holder.bindTo(products[position])
     }
 
-    class ProductViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    class ProductViewHolder(view: View, onRowClick: (Product) -> Unit) : RecyclerView.ViewHolder(view) {
+        private val listener = onRowClick
+        private val row = view
         private val productName = view.productName
         private val productDescription = view.productDescription
         private val ratingBar = view.ratingBar
@@ -51,8 +56,11 @@ class ProductAdapter(var products: ArrayList<Product>) :
         private val progressDrawable = getProgressDrawable(view.context)
 
         fun bindTo(product: Product) {
+            row.setOnClickListener{
+                listener(product)
+            }
             productName.text = product.productName
-            productDescription.text = Html.fromHtml(product.shortDescription?:"");
+            productDescription.text = Html.fromHtml(product.shortDescription ?: "");
             if (product.inStock == true) {
                 inStock.visibility = View.VISIBLE
                 unavailable.visibility = View.GONE

@@ -10,10 +10,10 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.observers.DisposableSingleObserver
 import io.reactivex.schedulers.Schedulers
+import javax.inject.Inject
 
 class ProductViewModel : ViewModel() {
 
-    private val productService = ProductsService()
     private val disposable = CompositeDisposable()
     val products = MutableLiveData<List<Product>>()
     val productsLoadingError = MutableLiveData<Boolean>()
@@ -59,17 +59,13 @@ class ProductViewModel : ViewModel() {
             })
     }
 
-    fun loadMore(size:Int) {
-        if (productLoading.value == false && size<ProductRepository.totalDataCount) {
+    fun loadMore(size: Int) {
+        if (productLoading.value == false && size < ProductRepository.totalDataCount) {
             productLoading.value = true
             ProductRepository.loadMore()
                 ?.subscribeWith(object : DisposableSingleObserver<List<Product>>() {
                     override fun onSuccess(prods: List<Product>?) {
-
-                        val list = mutableListOf<Product>()
-                        prods?.let { list.addAll(it) }
-                        products.value?.let { list.addAll(it) }
-                        products.value = list
+                        products.value = prods
                         productLoading.value = false
                         productsLoadingError.value = false
                     }
