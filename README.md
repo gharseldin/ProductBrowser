@@ -1,6 +1,6 @@
 # Product Browser
 
-This a List-Detail Android application for displaying a list of products in a list with some compact information. Further details about the product could be viewed by clicking on the products and get a detailed perspective of the specified product
+This is a List-Detail Android application for displaying a list of products in a list with some compact information. Further details about the product could be viewed by clicking on the products and get a detailed perspective of the specified product
 
 ## Getting Started
 
