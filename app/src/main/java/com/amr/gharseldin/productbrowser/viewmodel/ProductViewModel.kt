@@ -5,12 +5,8 @@ import androidx.lifecycle.ViewModel
 import com.amr.gharseldin.productbrowser.model.Product
 import com.amr.gharseldin.productbrowser.model.ProductList
 import com.amr.gharseldin.productbrowser.model.ProductRepository
-import com.amr.gharseldin.productbrowser.model.ProductsService
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.observers.DisposableSingleObserver
-import io.reactivex.schedulers.Schedulers
-import javax.inject.Inject
 
 class ProductViewModel : ViewModel() {
 
@@ -41,7 +37,7 @@ class ProductViewModel : ViewModel() {
                 }
             })
     }
-
+/*
     private fun fetchMockProducts() {
         productLoading.value = true
         ProductRepository.fetchMockProducts()
@@ -58,7 +54,7 @@ class ProductViewModel : ViewModel() {
                 }
             })
     }
-
+*/
     fun loadMore(size: Int) {
         if (productLoading.value == false && size < ProductRepository.totalDataCount) {
             productLoading.value = true
