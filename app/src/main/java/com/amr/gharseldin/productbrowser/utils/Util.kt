@@ -29,15 +29,17 @@ fun ImageView.loadImage(url:String?, progressDrawable: CircularProgressDrawable)
 }
 
 fun TextView.setUnitPrice(price:String?){
-    this.text = price?.split("$")?.get(1)?.split(".")?.get(0)?:"0"
+    this.text = getUnits(price)
+}
+
+fun getUnits(price: String?): CharSequence? {
+    return price?.split("$")?.get(1)?.split(".")?.get(0)?:"0"
 }
 
 fun TextView.setDecimalPrice(price:String?){
-    this.text = price?.split("$")?.get(1)?.split(".")?.get(1)?:"0"
+    this.text = getDecimals(price)
 }
 
-operator fun <T> MutableLiveData<ArrayList<T>>.plusAssign(values: List<T>) {
-    val value = this.value ?: arrayListOf()
-    value.addAll(values)
-    this.value = value
+fun getDecimals(price: String?): CharSequence? {
+    return price?.split("$")?.get(1)?.split(".")?.get(1)?:"0"
 }
